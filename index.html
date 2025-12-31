@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        background: #111;
+        color: #fff;
+        font-family: sans-serif;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .player-container {
+        position: relative;
+        display: inline-block;
+        width: 80%;
+      }
+
+      video {
+        width: 100%;
+        border: 2px solid #333;
+        margin-top: 20px;
+        background: #000;
+      }
+
+      video::cue {
+        color: #ffcc00;
+        background-color: rgba(0, 0, 0, 0.75);
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.2;
+        font-weight: bold;
+        text-shadow: 2px 2px 4px #000;
+      }
+
+      #thumbnail-preview {
+        position: absolute;
+        bottom: 80px;
+        width: 160px;
+        height: 90px;
+        border: 2px solid #fff;
+        border-radius: 4px;
+        background-image: url("/hls/thumbnails.jpg");
+        background-repeat: no-repeat;
+        background-size: 2560px 1350px; 
+        display: none;
+        pointer-events: none;
+        z-index: 100;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.8);
+      }
+
+      .controls {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        align-items: center;
+      }
+      button,
+      select {
+        padding: 10px;
+        background: #222;
+        color: white;
+        border: 1px solid #555;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #444;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style="color: #eee; font-weight: 300; letter-spacing: 1px">
+      My Private Stream
+    </h1>
+
+    <div class="player-container">
+      <video id="video" controls muted crossorigin="anonymous"></video>
+      <div id="thumbnail-preview"></div>
+    </div>
+
+    <div class="controls">
+      <label for="quality">Quality:</label>
+      <select id="quality">
+        <option value="-1">Auto (Network)</option>
+      </select>
+
+      <button onclick="adjustSubtitles(0.5)">+0.5s Delay</button>
+      <button onclick="adjustSubtitles(-0.5)">-0.5s Delay</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+      const video = document.getElementById("video");
+      const preview = document.getElementById("thumbnail-preview");
+      const qualitySelect = document.getElementById("quality");
+      const videoSrc = "/hls/master.m3u8";
+      const subtitleSrc = "/hls/subtitles.vtt";
+
+      function adjustSubtitles(offset) {
+        const track = video.textTracks[0];
+        if (track && track.cues) {
+          for (let i = 0; i < track.cues.length; i++) {
+            track.cues[i].startTime += offset;
+            track.cues[i].endTime += offset;
+          }
+        }
+      }
+
+      if (Hls.isSupported()) {
+        const hls = new Hls({
+          smoothQualityChange: true,
+          bandwidthEstimateWeight: 0.8,
+          maxBufferLength: 30,
+          maxMaxBufferLength: 60,
+          maxBufferSize: 60 * 1000 * 1000,
+          enableWorker: true,
+          lowLatencyMode: false,
+        });
+
+        hls.loadSource(videoSrc);
+        hls.attachMedia(video);
+
+        hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+          data.levels.forEach((level, index) => {
+            const option = document.createElement("option");
+            option.value = index;
+            option.text = level.height + "p";
+            qualitySelect.appendChild(option);
+          });
+
+          const track = document.createElement("track");
+          track.kind = "subtitles";
+          track.label = "English";
+          track.srclang = "en";
+          track.src = subtitleSrc;
+          track.default = true;
+          video.appendChild(track);
+
+          track.addEventListener("load", () => {
+            video.textTracks[0].mode = "showing";
+          });
+
+          video.play();
+        });
+
+        qualitySelect.addEventListener("change", (e) => {
+          hls.currentLevel = parseInt(e.target.value);
+        });
+      }
+
+      // Thumbnail Hover Logic
+      video.addEventListener("mousemove", (e) => {
+        const rect = video.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const controlBarHeight = 50;
+        if (y > rect.height - controlBarHeight) {
+          const percent = x / rect.width;
+          const time = percent * video.duration;
+
+          const interval = 10;
+          const columns = 16;
+          const thumbWidth = 160;
+          const index = Math.floor(time / interval);
+          const col = index % columns;
+          const row = Math.floor(index / columns);
+
+          preview.style.backgroundPosition = `-${col * 160}px -${row * 90}px`;
+          preview.style.left = `${x - 80}px`;
+          preview.style.display = "block";
+        } else {
+          preview.style.display = "none"; 
+        }
+      });
+
+      video.addEventListener("mouseleave", () => {
+        preview.style.display = "none";
+      });
+    </script>
+  </body>
+</html>
