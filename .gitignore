@@ -15,15 +15,18 @@ yarn-debug.log*
 yarn-error.log*
 
 # Project Specific - MEDIA STORAGE
-# Ignore the raw large video file
+# Ignore all video files
 storage/*.mp4
 storage/*.mkv
 storage/*.mov
 
-# Ignore generated HLS segments and playlists
+# Ignore all generated content in hls folder
 storage/hls/*
 
-# Ignore generated subtitles and sprites
+# But keep the folder itself
+!storage/hls/.gitkeep
+
+# Ignore generated subtitles and sprites in the main storage
 storage/*.vtt
 storage/*.jpg
 storage/*.png

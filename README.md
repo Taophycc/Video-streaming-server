@@ -2,7 +2,12 @@
 
 A Node.js video streaming server that uses **HTTP Live Streaming (HLS)** to deliver video content. It includes a processing script to transcode video into multiple resolutions and generate subtitles using local AI.
 
-![Video player demo](image-2.png)
+
+> **[Read the full technical deep-dive on Medium](https://taophycc.medium.com/building-a-pro-tier-video-streaming-server-hls-ai-subtitles-and-interactive-thumbnails-af6f14ff40a4)** — Learn about the "Level 1 to Level 4" evolution of this project, from a naive static server to an AI-powered autonomous pipeline.
+
+
+![Video player demo](demo.png)
+
 
 ## Features
 
@@ -63,7 +68,7 @@ Run the sprite generation script to create thumbnail previews for the player:
 node generate-vtt.js
 ```
 
-### 4. Run the Server
+### 5. Run the Server
 
 Start the streaming server:
 
@@ -79,11 +84,12 @@ The server will start at `http://localhost:3000`.
 .
 ├── src
 │   ├── process-video.js  # Main pipeline: FFmpeg transcoding & Whisper AI inference
-│   └── server.js         # Express server serving static HLS assets
+│   └── server.js         # Server for handling static HLS assets
 ├── storage
-│   ├── video.mp4         # Input source file
+│   ├── video.mp4         # Input source file (Git ignored)
 │   └── hls               # Output: .m3u8 playlists, .ts segments, .vtt subtitles
 ├── index.html            # Frontend player
+├── generate-vtt.js       # Sprite sheet & coordinate mapping logic
 ├── package.json
 └── README.md
 ```
@@ -93,7 +99,6 @@ The server will start at `http://localhost:3000`.
 - **[@xenova/transformers](https://www.npmjs.com/package/@xenova/transformers):** For running AI models (Whisper) in Node.js.
 - **[fluent-ffmpeg](https://www.npmjs.com/package/fluent-ffmpeg):** A fluent API for FFmpeg.
 - **[onnxruntime-node](https://www.npmjs.com/package/onnxruntime-node):** ONNX Runtime for Node.js.
-- **[pdfkit](https://www.npmjs.com/package/pdfkit):** PDF generation library.
 - **[sharp](https://www.npmjs.com/package/sharp):** High performance image processing.
 - **[wavefile](https://www.npmjs.com/package/wavefile):** Library to read and write wave files.
 
