@@ -5,7 +5,12 @@ A Node.js video streaming server that uses **HTTP Live Streaming (HLS)** to deli
 > **[Read the full technical deep-dive on Medium](https://taophycc.medium.com/building-a-pro-tier-video-streaming-server-hls-ai-subtitles-and-interactive-thumbnails-af6f14ff40a4)** — Learn about the "Level 1 to Level 4" evolution of this project, from a naive static server to an AI-powered autonomous pipeline.
 
 ![Video player demo](./public/demo.png)
-[![Node.js HLS Streaming Server Demo](https://img.youtube.com/vi/k8P8tMzKKZk/0.jpg)](https://www.youtube.com/watch?v=k8P8tMzKKZk)
+<div align="center">
+  <a href="https://www.youtube.com/watch?v=k8P8tMzKKZk">
+    <img src="https://img.youtube.com/vi/k8P8tMzKKZk/0.jpg" alt="Video Stream Server Demo">
+    <p>▶️ Click to watch the AI-Powered HLS Streaming Demo</p>
+  </a>
+</div>
 
 ## Features
 
