@@ -1,32 +1,27 @@
-# Dependencies
 node_modules/
 package-lock.json
 
-# Environment variables
 .env
 
-# System Files
 .DS_Store
 Thumbs.db
 
-# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Project Specific - MEDIA STORAGE
-# Ignore all video files
 storage/*.mp4
 storage/*.mkv
 storage/*.mov
 
-# Ignore all generated content in hls folder
 storage/hls/*
 
-# But keep the folder itself
 !storage/hls/.gitkeep
 
-# Ignore generated subtitles and sprites in the main storage
 storage/*.vtt
 storage/*.jpg
 storage/*.png
+
+!patches/
+
+storage/hls/**/*

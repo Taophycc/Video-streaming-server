@@ -8,6 +8,19 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node src/server.js"
   },
+  "pnpm": {
+    "neverBuiltDependencies": [
+      "sharp"
+    ],
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "sharp"
+      ]
+    },
+    "patchedDependencies": {
+      "sharp@0.32.6": "patches/sharp@0.32.6.patch"
+    }
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
